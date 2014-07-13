@@ -1,4 +1,4 @@
 PyChess
 =======
 
-A python implementation of a peer to peer chess game
+A python implementation of peer to peer chess
