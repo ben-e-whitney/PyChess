@@ -19,13 +19,14 @@ class GameServer:
         """
         self.master = master
         self.queue  = Queue.Queue()
-        self.game   = ChessGui(HumanPlayer('ben'),HumanPlayer('joe'), self.master, self, self.queue)
+        self.game   = ChessGui(HumanPlayer('ben'),HumanPlayer('joe'),
+                               self.master, self, self.queue)
         self.server = socket(AF_INET, SOCK_STREAM)
         self.server.bind((host, port))
 
         self.server.listen(2)
-        self.conn      = None 
-        self.listener  = Thread(target = self._recv_thread)
+        self.conn      = None
+        self.listener  = Thread(target=self._recv_thread)
         self.listener.start()
         self._update_game()
 
@@ -42,11 +43,11 @@ class GameServer:
         Listen to incoming instructions from second player. Put on second thread to allow concurrent execution
             - incoming message must be in the form ((x,y), (u,v))
         """
-        
+
         while True:
             if not self.conn: 
-                self.conn, address  = self.server.accept()
-                
+                self.conn, address = self.server.accept()
+
             data  = self.conn.recv(1024)
             if data:
                 at, to = literal_eval(data)
@@ -60,7 +61,7 @@ class GameServer:
             - outgoing message must be in the form ((x,y), (u,v))
         """
         if self.conn:
-            message = '(' + str(at) + ',' + str(to) + ')'
+            message = '({at},{to})'.format(at=at, to=to)
             print message
             self.conn.send(message)
 
